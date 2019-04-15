@@ -7,7 +7,7 @@
             <h1>{{ title }}</h1>
             <h2>{{ msg }}</h2>
           </div>
-          <form action="">
+          <div ref="meuForm">
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label class="lg-bold">{{ form.name.label }}</label>
@@ -29,7 +29,7 @@
                 <label class="lg-bold">{{ form.gen.label }}</label>
                 <select class="form-control" v-model="form.gen.items.value">
                   <option>Selecione...</option>
-                  <!-- <option v-for="item in gen.items" v-bind:value="item.value">{{ item.label }}</option> -->
+                  <option v-for="item in form.gen.items" v-bind:value="item.value">{{ item.label }}</option>
                 </select>
               </div>
               <div class="form-group col-md-6 form-check">
@@ -38,6 +38,8 @@
                   {{ form.status.label }}
                 </label>
               </div>
+            </div>
+            <div class="form-row">
               <div class="form-group">
                 <div class="col-md-12">
                   <label class="lg-bold">{{ form.date.label }}</label>
@@ -46,11 +48,43 @@
               </div>
             </div>
             <div class="text-center">
-              <button class="btn btn-primary" v-on:click="send">Enviar</button>
+              <button class="btn btn-primary" @click="addPessoa">Enviar</button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          <table class="table">
+            <thead>
+              <tr v-for="item in pessoas">
+                <th>ID</th>
+                <th>{{ item.nome.label }}</th>
+                <th>{{ item.cpf.label }}</th>
+                <th>{{ item.phone.label }}</th>
+                <th>{{ item.email.label }}</th>
+                <th>{{ item.gen.label }}</th>
+                <th>{{ item.status.label }}</th>
+                <th>{{ item.date.label }}</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, i) in pessoas">
+                <th>{{ i }}</th>
+                <td>{{ item.nome.value }}</td>
+                <td>{{ item.cpf.value }}</td>
+                <td>{{ item.phone.value }}</td>
+                <td>{{ item.email.value }}</td>
+                <td>{{ item.gen.value }}</td>
+                <td>{{ item.status.value }}</td>
+                <td>{{ item.date.value }}</td>
+                <td><span @click="removePessoa()" style="cursor: pointer;">deletar</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div> 
     </div>
   </div>
 </template>
@@ -91,15 +125,39 @@ export default {
           label: 'Data de nascimento',
           value: ''
         }
+      },
+      pessoas: [],
+      newPessoa: null
+    }
+  },
+  mounted() {
+    if(localStorage.getItem('pessoas')) {
+      try {
+        this.pessoas = JSON.parse(localStorage.getItem('pessoas'));
+      } catch (error) {
+        localStorage.removeItem('pessoas');
       }
     }
-  }
+  },
+  methods: Object.assign({
+    addPessoa() {
+      console.log(this.form);
+      this.newPessoa = this.form;
+      if(!this.newPessoa) return;
+      this.pessoas.push(this.newPessoa);
+      this.newPessoa = null;
+      this.savePessoa();
+    },
+    removePessoa() {
+      this.pessoas.splice(index, 1);
+      this.savePessoa();
+    },
+    savePessoa() {
+      const parsed = JSON.stringify(this.pessoas);
+      localStorage.setItem('pessoas', parsed);
+    }
+  })
 }
-methods: Object.assign({
-  send() {
-
-  }
-})
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
