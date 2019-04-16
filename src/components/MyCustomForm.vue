@@ -155,14 +155,40 @@ export default {
   methods: Object.assign({
     addAluno () {
       this.aluno = this.form
+      console.log(this.aluno)
       if (!this.aluno) return
-      this.alunosList.push(this.aluno)
+      if (this.isValid(this.aluno)) {
+        this.alunosList.push(this.aluno)
+        this.saveAluno()
+      }
       this.aluno = null
-      this.saveAluno()
     },
     removeAluno (i) {
       this.alunosList.splice(i, 1)
       this.saveAluno()
+    },
+    isValid (obj) {
+      let formValid = true
+      console.log(obj)
+      if (obj.name.value.length >= 4 && obj.cpf.value.length >= 11) {
+        this.alunosList.forEach(a => {
+          console.log(a)
+          if (a.cpf.value === obj.cpf.value) {
+            formValid = false
+            alert('Aluno já cadastrado!')
+          } else {
+            formValid = true
+          }
+        })
+      } else {
+        alert('Os campos Nome Completo e CPF são obrigatórios.')
+        formValid = false
+      }
+      if (formValid) {
+        return true
+      } else {
+        return false
+      }
     },
     saveAluno () {
       const parsed = JSON.stringify(this.alunosList)
