@@ -21,4 +21,13 @@ export default {
 
 <style lang="css">
 @import './assets/bootstrap.min';
+@import '../node_modules/@fortawesome/fontawesome-free/css/fontawesome';
+@font-face {
+  font-family: 'Font Awesome 5 Solid';
+  src: url('../node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.eot'),
+   url('../node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.woff') format('woff'),
+   url('../node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 </style>
