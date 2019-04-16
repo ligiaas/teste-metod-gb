@@ -18,7 +18,7 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label class="lg-label">{{ form.name.label }}</label>
-              <input type="text" class="form-control" v-model="form.name.value">
+              <input type="text" class="form-control" v-model="form.name.value" placeholder="">
             </div>
             <div class="form-group col-md-6">
               <label class="lg-label">{{ form.cpf.label }}</label>
