@@ -2,7 +2,7 @@
   "name": "form-test",
   "version": "1.0.0",
   "description": "Teste de criação de formulário",
-  "author": "Ligia Almeida Silva ligiaalmeidasilva[at]gmail.com",
+  "author": "Ligia Almeida Silva ligiaalmeidasilva@gmail.com",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

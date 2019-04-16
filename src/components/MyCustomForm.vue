@@ -7,34 +7,33 @@
             <h1>{{ title }}</h1>
             <h2>{{ msg }}</h2>
           </div>
-          <div ref="meuForm">
+          <div>
             <div class="form-row">
               <div class="form-group col-md-6">
-                <label class="lg-bold">{{ form.name.label }}</label>
-                <input type="text" class="form-control empty" v-model="form.name.value" placeholder="">
+                <label class="lg-label">{{ form.name.label }}</label>
+                <input type="text" class="form-control" v-model="form.name.value">
               </div>
               <div class="form-group col-md-6">
-                <label class="lg-bold">{{ form.cpf.label }}</label>
+                <label class="lg-label">{{ form.cpf.label }}</label>
                 <input type="text" class="form-control" v-model="form.cpf.value">
               </div>
               <div class="form-group col-md-6">
-                <label class="lg-bold">{{ form.phone.label }}</label>
+                <label class="lg-label">{{ form.phone.label }}</label>
                 <input type="text" class="form-control" v-model="form.phone.value">
               </div>
               <div class="form-group col-md-6">
-                <label class="lg-bold">{{ form.email.label }}</label>
+                <label class="lg-label">{{ form.email.label }}</label>
                 <input type="text" class="form-control" v-model="form.email.value">
               </div>
               <div class="form-group col-md-6">
-                <label class="lg-bold">{{ form.gen.label }}</label>
-                <select class="form-control" v-model="form.gen.items.value">
-                  <option>Selecione...</option>
-                  <option v-for="item in form.gen.items" v-bind:value="item.value">{{ item.label }}</option>
+                <label class="lg-label">{{ form.genero.label }}</label>
+                <select class="form-control" v-model="form.genero.value" placeholder="Selecione...">
+                  <option v-for="gen in values" v-bind:value="gen.value" v-bind:key="gen.id">{{ gen.value }}</option>
                 </select>
               </div>
               <div class="form-group col-md-6 form-check">
                 <input type="checkbox" class="form-check-input" v-model="form.status.value">
-                <label class="lg-bold form-check-label lg-bold">
+                <label class="lg-label form-check-label">
                   {{ form.status.label }}
                 </label>
               </div>
@@ -42,49 +41,49 @@
             <div class="form-row">
               <div class="form-group">
                 <div class="col-md-12">
-                  <label class="lg-bold">{{ form.date.label }}</label>
+                  <label class="lg-label">{{ form.date.label }}</label>
                   <input type="date" class="form-control" v-model="form.date.value">
                 </div>
               </div>
             </div>
             <div class="text-center">
-              <button class="btn btn-primary" @click="addPessoa">Enviar</button>
+              <button class="btn btn-primary" @click="addAluno()">Enviar</button>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="alunosList.length >= 1">
         <div class="col-md-12">
           <table class="table">
             <thead>
-              <tr v-for="item in pessoas">
+              <tr>
                 <th>ID</th>
-                <th>{{ item.nome.label }}</th>
-                <th>{{ item.cpf.label }}</th>
-                <th>{{ item.phone.label }}</th>
-                <th>{{ item.email.label }}</th>
-                <th>{{ item.gen.label }}</th>
-                <th>{{ item.status.label }}</th>
-                <th>{{ item.date.label }}</th>
-                <th>Ação</th>
+                <th>{{ form.name.label }}</th>
+                <th>{{ form.cpf.label }}</th>
+                <th>{{ form.phone.label }}</th>
+                <th>{{ form.email.label }}</th>
+                <th>{{ form.genero.label }}</th>
+                <th>{{ form.status.label }}</th>
+                <th>{{ form.date.label }}</th>
+                <th>Ações</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, i) in pessoas">
-                <th>{{ i }}</th>
-                <td>{{ item.nome.value }}</td>
+              <tr v-for="(item, i) in alunosList" v-bind:key="item.id">
+                <td>{{ i }}</td>
+                <td>{{ item.name.value }}</td>
                 <td>{{ item.cpf.value }}</td>
                 <td>{{ item.phone.value }}</td>
                 <td>{{ item.email.value }}</td>
-                <td>{{ item.gen.value }}</td>
+                <td>{{ item.genero.value }}</td>
                 <td>{{ item.status.value }}</td>
                 <td>{{ item.date.value }}</td>
-                <td><span @click="removePessoa()" style="cursor: pointer;">deletar</span></td>
+                <td><span @click="removeAluno(i)" style="cursor: pointer;">deletar</span></td>
               </tr>
             </tbody>
           </table>
         </div>
-      </div> 
+      </div>
     </div>
   </div>
 </template>
@@ -94,7 +93,7 @@ export default {
   name: 'MyCustomForm',
   data () {
     return {
-      title: 'Teste Lígia de Almeida Silva',
+      title: 'Metodologia Gustavo Borges',
       msg: 'Formulário de Contato',
       form: {
         name: {
@@ -113,9 +112,9 @@ export default {
           label: 'E-mail',
           value: ''
         },
-        gen: {
+        genero: {
           label: 'Gênero',
-          items: [{value: 'masculino', label: 'Masculino'}, {value: 'feminino', label: 'Feminino'}]
+          value: ''
         },
         status: {
           label: 'Ativo',
@@ -126,35 +125,54 @@ export default {
           value: ''
         }
       },
-      pessoas: [],
-      newPessoa: null
+      values: [
+        {value: 'Masculino'},
+        {value: 'Feminino'}
+      ],
+      labelList: [
+        {name: 'Nome Completo'},
+        {cpf: 'CPF'},
+        {phone: 'Telefone'},
+        {email: 'E-mail'},
+        {gen: 'Gênero'},
+        {status: 'Status'},
+        {date: 'Data de Nascimento'}
+      ],
+      formSelected: false,
+      alunosList: [],
+      aluno: null
     }
   },
-  mounted() {
-    if(localStorage.getItem('pessoas')) {
+  mounted () {
+    if (localStorage.getItem('alunosList')) {
       try {
-        this.pessoas = JSON.parse(localStorage.getItem('pessoas'));
+        this.alunosList = JSON.parse(localStorage.getItem('alunosList'))
       } catch (error) {
-        localStorage.removeItem('pessoas');
+        localStorage.removeItem('alunosList')
       }
     }
   },
   methods: Object.assign({
-    addPessoa() {
-      console.log(this.form);
-      this.newPessoa = this.form;
-      if(!this.newPessoa) return;
-      this.pessoas.push(this.newPessoa);
-      this.newPessoa = null;
-      this.savePessoa();
+    addAluno () {
+      this.aluno = this.form
+      if (!this.aluno) return
+      this.alunosList.push(this.aluno)
+      this.aluno = null
+      this.saveAluno()
     },
-    removePessoa() {
-      this.pessoas.splice(index, 1);
-      this.savePessoa();
+    removeAluno (i) {
+      this.alunosList.splice(i, 1)
+      this.saveAluno()
     },
-    savePessoa() {
-      const parsed = JSON.stringify(this.pessoas);
-      localStorage.setItem('pessoas', parsed);
+    saveAluno () {
+      const parsed = JSON.stringify(this.alunosList)
+      localStorage.setItem('alunosList', parsed)
+      this.listAlunos()
+    },
+    listAlunos () {
+      this.alunosList = JSON.parse(localStorage.getItem('alunosList'))
+      this.formSelected = true
+      console.log(this.alunosList)
     }
   })
 }
@@ -162,18 +180,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.row {
+  margin: 20px;
+}
 h1 {
   color: #1F2041;
 }
-.lg-bold {
+.lg-label {
+  text-align: left;
   color: rgb(31, 32, 65, 100);
   font-weight: bold;
 }
 h2 {
   color: rgb(31, 32, 65, .75);
-}
-label {
-  text-align: left;
 }
 input.empty {
   font-family: FontAwesome;
