@@ -4,10 +4,8 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <div class="text-center">
-              <h1>{{ title }}</h1>
-              <h2>{{ msg }}</h2>
-            </div>
+            <img src="../assets/logo_mgb.png">
+            <h1 class="text-center mgb-title">{{ title }}</h1>
           </div>
         </div>
       </div>
@@ -18,26 +16,26 @@
           <div class="form-row">
             <div class="form-group col-md-6">
               <label class="lg-label">{{ form.name.label }}</label>
-              <input type="text" class="form-control" v-model="form.name.value" placeholder="">
+              <input type="text" class="form-control" v-model="form.name.value" placeholder="Digite aqui...">
             </div>
             <div class="form-group col-md-6">
               <label class="lg-label">{{ form.cpf.label }}</label>
-              <input type="text" class="form-control" v-model="form.cpf.value">
+              <input type="text" class="form-control" v-model="form.cpf.value" placeholder="Digite aqui...">
             </div>
             <div class="form-group col-md-6">
               <label class="lg-label">{{ form.phone.label }}</label>
-              <input type="text" class="form-control" v-model="form.phone.value">
+              <input type="text" class="form-control" v-model="form.phone.value" placeholder="Digite aqui...">
             </div>
             <div class="form-group col-md-6">
               <label class="lg-label">{{ form.email.label }}</label>
-              <input type="text" class="form-control" v-model="form.email.value">
+              <input type="email" class="form-control" v-model="form.email.value" placeholder="Digite aqui...">
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-md-4">
               <label class="lg-label">{{ form.genero.label }}</label>
               <select class="form-control" v-model="form.genero.value" placeholder="Selecione...">
-                <option v-for="gen in values" v-bind:value="gen.value" v-bind:key="gen.id">{{ gen.value }}</option>
+                <option v-for="gen in values" v-bind:value="gen.value" v-bind:key="gen.id">{{ gen.label }}</option>
               </select>
             </div>
             <div class="form-group col-md-4">
@@ -45,15 +43,16 @@
               <input type="date" class="form-control" v-model="form.date.value">
             </div>
             <div class="form-group col-md-4">
-              <div class="form-check form-check-inline lg-checkbox">
-                <input type="checkbox" class="form-check-input" v-model="form.status.value">
+              <div class="form-check form-check-inline lg-checkbox checkbox">
                 <label class="lg-label form-check-label">
+                  <input type="checkbox" class="form-check-input" v-model="form.status.value">
+                  <span class="cr"><i class="cr-icon fas fa-check"></i></span>
                   {{ form.status.label }}
                 </label>
               </div>
             </div>
           </div>
-          <div class="text-center">
+          <div class="mt-5 mb-5">
             <button class="btn btn-mgb-primary" @click="addAluno()" key="add">Enviar</button>
             <button class="btn btn-mgb-secondary" @click="cancelAdd()" key="edit">Cancelar</button>
           </div>
@@ -62,9 +61,7 @@
       <transition name="trans-y">
         <div class="row" v-if="alunosList.length >= 1">
           <div class="col-md-12">
-            <div class="text-center">
-              <h2>{{ titleTable }}</h2>
-            </div>
+            <h1>{{ titleTable }}</h1>
             <table class="table">
               <thead>
                 <tr>
@@ -106,7 +103,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-4 offset-4">
-            <p class="text-center">{{ msgFooter }}</p>
+            <h5 class="text-center mgb-footer">{{ msgFooter }}</h5>
           </div>
         </div>
       </div>
@@ -120,8 +117,7 @@ export default {
   data () {
     return {
       action: true,
-      title: 'Metodologia Gustavo Borges',
-      msg: 'Formulário de Contato',
+      title: 'Formulário de Contato',
       titleTable: 'Alunos Cadastrados',
       msgFooter: 'Lígia de Almeida Silva',
       form: {
@@ -155,8 +151,8 @@ export default {
         }
       },
       values: [
-        {value: 'Masculino'},
-        {value: 'Feminino'}
+        {label: 'Masculino', value: 'M'},
+        {label: 'Feminino', value: 'F'}
       ],
       labelList: [
         {name: 'Nome Completo'},
@@ -182,14 +178,42 @@ export default {
   },
   methods: Object.assign({
     addAluno () {
-      this.aluno = this.form
-      console.log(this.aluno)
-      if (!this.aluno) return
-      if (this.isValid(this.aluno)) {
-        this.alunosList.push(this.aluno)
+      console.log(this.form)
+      if (!this.form) return
+      if (this.isValid(this.form)) {
+        this.alunosList.push(this.form)
         this.saveAluno()
       }
-      this.aluno = null
+      this.form = {
+        name: {
+          label: 'Nome completo',
+          value: ''
+        },
+        cpf: {
+          label: 'CPF',
+          value: ''
+        },
+        phone: {
+          label: 'Telefone',
+          value: ''
+        },
+        email: {
+          label: 'E-mail',
+          value: ''
+        },
+        genero: {
+          label: 'Gênero',
+          value: ''
+        },
+        status: {
+          label: 'Ativo',
+          value: false
+        },
+        date: {
+          label: 'Data de nascimento',
+          value: ''
+        }
+      }
     },
     editAluno (item, isnew) {
       this.form = item
@@ -268,21 +292,12 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-body {
-  font-family: 'Montserrat';
+/* text elements */
+h2 {
+  color: rgb(31, 32, 65, .75);
 }
-.row {
-  margin: 20px;
-}
-h1 {
-  color: #1F2041;
-}
-  h2 {
-    color: rgb(31, 32, 65, .75);
-  }
 .lg-label {
   text-align: left;
-  color: rgb(31, 32, 65, 100);
   font-weight: bold;
 }
 .lg-checkbox {
@@ -302,11 +317,40 @@ span {
   cursor: pointer;
   color: #000;
 }
+.mgb-footer {
+  color: #BC9CFF;
+  font-weight: bold;
+}
+img {
+  display: block;
+  width: 40%;
+  margin: auto;
+}
+
+/* Positions Style */
+.row {
+  margin: 20px;
+}
+.mgb-title {
+  vertical-align: middle;
+  display: inline-block;
+}
+.form-control {
+  border: 1px solid rgba(31, 32, 65, 0.25);
+  box-sizing: border-box;
+  border-radius: 4px;
+}
+.form-control:hover, .form-control:focus {
+  border: 1px solid rgba(31, 32, 65, 0.5);
+  box-shadow: none;
+}
+
+/* Button */
 .btn {
   font-family: Arial, Helvetica, sans-serif;
   font-style: normal;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 16px;
   line-height: normal;
   text-transform: uppercase;
   color: #FFFFFF;
@@ -319,6 +363,38 @@ span {
   background: linear-gradient(180deg, #6FCF97 0%, #66D2EA 100%);
 }
 
+/* checkbox */
+.checkbox label:after {
+  content: '';
+  display: table;
+  clear: both;
+}
+.checkbox .cr {
+  position: relative;
+  display: inline-block;
+  border: 1px solid rgba(31, 32, 65, 0.25);
+  border-radius: .25em;
+  width: 1.5em;
+  height: 1.5em;
+  margin-right: .5em;
+}
+.checkbox .cr .cr-icon {
+  position: absolute;
+  font-size: .8em;
+  line-height: 0;
+  top: 45%;
+  left: 9%;
+}
+.checkbox label input[type="checkbox"] {
+  display: none;
+}
+.checkbox label input[type="checkbox"]+.cr>.cr-icon {
+  opacity: 0;
+}
+.checkbox label input[type="checkbox"]:checked+.cr>.cr-icon {
+  opacity: 1;
+}
+
 /* transition */
 .trans-y-enter-active, .trans-y-leave-active {
   transition: all 0.3s ease;
@@ -326,5 +402,13 @@ span {
 .trans-y-enter, .trans-y-leave-to {
   transform: translateY(-5%);
   opacity: 0;
+}
+/* Responsiviness */
+@media only screen and (min-width: 768px) {
+  img {
+    display: inline-block;
+    width: 20%;
+    margin: 20px 20px 20px 0;
+  }
 }
 </style>
