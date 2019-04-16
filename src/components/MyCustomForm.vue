@@ -178,7 +178,6 @@ export default {
   },
   methods: Object.assign({
     addAluno () {
-      console.log(this.form)
       if (!this.form) return
       if (this.isValid(this.form)) {
         this.alunosList.push(this.form)
@@ -255,12 +254,11 @@ export default {
       this.alunosList.splice(i, 1)
       this.saveAluno()
     },
+    // Valida de os campos Nome e CPF foram preenchidos corretamente e se o CPF informado já consta na base de dados
     isValid (obj) {
       let formValid = true
-      console.log(obj)
       if (obj.name.value.length >= 4 && obj.cpf.value.length >= 11) {
         this.alunosList.forEach(a => {
-          console.log(a)
           if (a.cpf.value === obj.cpf.value) {
             formValid = false
             alert('Aluno já cadastrado!')
